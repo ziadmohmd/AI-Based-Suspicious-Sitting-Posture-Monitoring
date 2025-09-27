@@ -137,13 +137,7 @@ Key configuration variables in `mainapp.py`:
 - **Notifications**: Plyer may require additional setup on some systems.
 - **Performance**: Reduce frame rate or resolution if experiencing lag.
 
-## Contributing
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit changes.
-4. Push to the branch.
-5. Open a Pull Request.
 
 ## License
 
@@ -152,4 +146,5 @@ This project is licensed under the MIT License. See LICENSE file for details.
 ## Disclaimer
 
 This tool is for educational and ergonomic purposes. Ensure compliance with privacy laws when using face recognition features.
+
 
