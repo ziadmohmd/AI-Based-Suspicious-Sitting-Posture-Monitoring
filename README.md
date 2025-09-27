@@ -1,4 +1,4 @@
-# PostureGuard Pro
+# Real-time Posture Monitoring
 
 An AI-powered posture monitoring system designed to enhance workplace ergonomics and employee well-being. Utilizing advanced computer vision techniques, PostureGuard Pro provides real-time posture analysis, eye state detection, employee recognition, and comprehensive data logging with interactive dashboards.
 
@@ -152,3 +152,4 @@ This project is licensed under the MIT License. See LICENSE file for details.
 ## Disclaimer
 
 This tool is for educational and ergonomic purposes. Ensure compliance with privacy laws when using face recognition features.
+
