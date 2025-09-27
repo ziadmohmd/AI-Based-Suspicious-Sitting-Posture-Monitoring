@@ -873,6 +873,41 @@ def debug_csv():
     except Exception as e:
         return jsonify({"error": f"Failed to read CSV: {str(e)}"})
 
+
+# Rename and Remove Usernames
+@app.route("/rename_employee", methods=["POST"])
+def rename_employee():
+    data = request.get_json()
+    emp_id = data.get("employee_id")
+    new_name = data.get("new_name")
+
+    try:
+        conn = sqlite3.connect("employees.db")
+        cursor = conn.cursor()
+        cursor.execute("UPDATE employees SET name=? WHERE id=?", (new_name, emp_id))
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})        
+
+@app.route("/remove_employee", methods=["POST"])
+def remove_employee():
+    data = request.get_json()
+    emp_id = data.get("employee_id")
+
+    try:
+        conn = sqlite3.connect("employees.db")
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM employees WHERE id=?", (emp_id,))
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+
 # ------------------ MAIN ------------------ #
 if __name__ == "__main__":
     init_db()
