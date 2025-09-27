@@ -1,0 +1,15 @@
+Flask==3.0.3
+mediapipe==0.10.21
+opencv-python==4.9.0.80
+numpy==1.26.4
+pandas==2.2.2
+plotly==5.22.0
+kaleido==0.2.1
+plyer==2.1.0
+deepface
+tensorflow
+keras
+mtcnn
+retina-face
+matplotlib
+insightface

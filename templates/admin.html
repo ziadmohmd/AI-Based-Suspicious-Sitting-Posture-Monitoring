@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - PostureGuard Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --bg-primary: #0f1236;
+      --bg-secondary: #1a1f3a;
+      --bg-section: #1b1f45;
+      --bg-metric: #262a5a;
+      --bg-card: #262a5a;
+      --text-primary: #eef1f7;
+      --accent: #1e90ff;
+      --shadow: rgba(0,0,0,0.5);
+      --shadow-light: rgba(0,0,0,0.3);
+    }
+    .light-mode {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #ffffff;
+      --bg-section: rgba(255,255,255,0.8);
+      --bg-metric: #e8ecf0;
+      --bg-card: #e8ecf0;
+      --text-primary: #2c3e50;
+      --accent: #3498db;
+      --shadow: rgba(0,0,0,0.1);
+      --shadow-light: rgba(0,0,0,0.1);
+    }
+
+    /* Reset & base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 20px;
+      transition: background 0.5s, color 0.5s;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      animation: fadeInDown 1s ease-in-out;
+    }
+    h2 {
+      font-weight: 500;
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: 0.3s;
+      box-shadow: inset 3px 3px 6px var(--shadow-light), inset -3px -3px 6px rgba(255,255,255,0.1);
+    }
+    .theme-toggle:hover {
+      box-shadow: 0 0 10px var(--accent), inset 3px 3px 6px var(--shadow-light), inset -3px -3px 6px rgba(255,255,255,0.1);
+    }
+
+    /* Buttons */
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      margin: 10px 5px;
+      transition: all 0.3s ease, transform 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: inset 5px 5px 10px var(--shadow-light), inset -5px -5px 10px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .button:hover {
+      background: #3aa0ff;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px var(--accent), inset 5px 5px 10px var(--shadow-light), inset -5px -5px 10px rgba(255,255,255,0.1);
+    }
+    .button:active { transform: scale(0.95); }
+    .button:disabled { background: #555; cursor: not-allowed; }
+
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+    }
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    section {
+      background: var(--bg-section);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px var(--shadow), inset 5px 5px 10px var(--shadow-light), inset -5px -5px 10px rgba(255,255,255,0.1);
+      animation: fadeInUp 0.8s ease;
+      transition: opacity 0.5s ease-in-out;
+    }
+    input, select {
+      width: calc(100% - 24px);
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: var(--bg-metric);
+      color: var(--text-primary);
+    }
+    button { font-size: 1rem; }
+
+    video {
+      border-radius: 12px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 640px;
+      border: 2px solid var(--accent);
+      display: block;
+    }
+
+    ul { list-style: none; padding: 0; }
+    .emp-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(5px);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px var(--shadow-light), inset 3px 3px 6px var(--shadow-light), inset -3px -3px 6px rgba(255,255,255,0.1);
+      transition: transform 0.2s;
+    }
+    .emp-card:hover {
+      transform: translateY(-3px);
+    }
+    .emp-actions button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+    }
+    .remove-btn { background: #e74c3c; }
+    .remove-btn:hover { background: #ff5c4c; }
+    .rename-btn { background: #f39c12; }
+    .rename-btn:hover { background: #ffae32; }
+
+    #employee-dashboard select {
+      max-width: 300px;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    .blink {
+      animation: blink 1s infinite;
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 15px; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.2rem; }
+      video { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PostureGuard Pro - Admin Panel</h1>
+    <button class="theme-toggle" id="theme-toggle">🌕</button>
+    <a href="/" class="button blink">Back to Main</a>
+  </header>
+
+  <section id="registration">
+    <h2>Register Employee</h2>
+    <input type="text" id="emp-name" placeholder="Employee Name">
+    <video id="admin-video" autoplay></video>
+    <canvas id="capture-canvas" style="display: none;"></canvas>
+    <div style="margin-top: 10px;">
+      <button class="button" id="capture-btn">Capture Face</button>
+      <button class="button" id="register-btn">Register</button>
+      <button class="button" id="train-btn" disabled>Train Model</button>
+    </div>
+  </section>
+
+  <section id="employee-list">
+    <h2>Registered Employees</h2>
+    <div id="emp-list"></div>
+  </section>
+
+  <section id="employee-dashboard">
+    <h2>Employee Dashboard</h2>
+    <select id="employee-select">
+      <option value="">Select Employee</option>
+    </select>
+    <button class="button" id="view-dashboard-btn">View Dashboard</button>
+  </section>
+
+  <script>
+    // Camera access
+    const video = document.getElementById('admin-video');
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => console.error('Error accessing camera:', err));
+
+    const canvas = document.getElementById('capture-canvas');
+    const captureBtn = document.getElementById('capture-btn');
+    let capturedImage;
+
+    captureBtn.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      capturedImage = canvas.toDataURL('image/png');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        icon: 'success',
+        title: 'Face captured!'
+      });
+    });
+
+    const registerBtn = document.getElementById('register-btn');
+    const trainBtn = document.getElementById('train-btn');
+
+    registerBtn.addEventListener('click', () => {
+      const name = document.getElementById('emp-name').value;
+      if (!name || !capturedImage) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          icon: 'error',
+          title: 'Enter name and capture face'
+        });
+        return;
+      }
+      fetch('/register_employee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, image: capturedImage })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: 'success',
+            title: `Employee ${name} registered successfully (ID: ${data.employee_id})`
+          });
+          loadEmployees();
+          trainBtn.disabled = false;
+        } else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: 'error',
+            title: 'Error: ' + data.error
+          });
+        }
+      });
+    });
+
+    trainBtn.addEventListener('click', () => {
+      fetch('/train_model', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: 'success',
+            title: 'Model trained successfully!'
+          });
+          trainBtn.disabled = true;
+        } else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: 'error',
+            title: 'Error: ' + data.error
+          });
+        }
+      });
+    });
+
+    // Load employees
+    function loadEmployees() {
+      fetch('/employees').then(res => res.json())
+      .then(emps => {
+        const list = document.getElementById('emp-list');
+        const select = document.getElementById('employee-select');
+        list.innerHTML = '';
+        select.innerHTML = '<option value="">Select Employee</option>';
+        emps.forEach(emp => {
+          const card = document.createElement('div');
+          card.className = 'emp-card';
+          card.innerHTML = `
+            <span>ID: ${emp[0]} | Name: ${emp[1]}</span>
+            <div class="emp-actions">
+              <button class="button rename-btn" onclick="renameEmployee(${emp[0]}, '${emp[1]}')">Rename</button>
+              <button class="button remove-btn" onclick="removeEmployee(${emp[0]})">Remove</button>
+            </div>`;
+          list.appendChild(card);
+
+          const option = document.createElement('option');
+          option.value = emp[0];
+          option.textContent = `${emp[1]} (ID: ${emp[0]})`;
+          select.appendChild(option);
+        });
+      });
+    }
+    loadEmployees();
+
+    // Remove employee
+    function removeEmployee(empId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to remove this employee?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch('/remove_employee', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employee_id: empId })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.ok) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: 'success',
+                title: 'Employee removed successfully'
+              });
+              loadEmployees();
+            } else {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: 'error',
+                title: 'Error: ' + data.error
+              });
+            }
+          });
+        }
+      });
+    }
+
+    // Rename employee
+    function renameEmployee(empId, oldName) {
+      Swal.fire({
+        title: 'Rename Employee',
+        input: 'text',
+        inputLabel: 'New Name',
+        inputValue: oldName,
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'You need to write something!';
+          }
+          if (value === oldName) {
+            return 'New name must be different!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const newName = result.value;
+          fetch('/rename_employee', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ employee_id: empId, new_name: newName })
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.ok) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: 'success',
+                title: 'Employee renamed successfully'
+              });
+              loadEmployees();
+            } else {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                icon: 'error',
+                title: 'Error: ' + data.error
+              });
+            }
+          });
+        }
+      });
+    }
+
+    // Dashboard
+    const viewDashboardBtn = document.getElementById('view-dashboard-btn');
+    viewDashboardBtn.addEventListener('click', () => {
+      const employeeId = document.getElementById('employee-select').value;
+      if (!employeeId) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          icon: 'error',
+          title: 'Please select an employee'
+        });
+        return;
+      }
+      window.open(`/dashboard_html?employee_id=${employeeId}`, '_blank');
+    });
+  </script>
+</body>
+</html>
