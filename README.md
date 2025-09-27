@@ -59,10 +59,7 @@ An AI-powered posture monitoring system designed to enhance workplace ergonomics
    python mainapp.py
    ```
 
-5. **Access the Application**:
-   - Main Interface: http://127.0.0.1:5000
-   - Admin Panel: http://127.0.0.1:5000/admin
-   - Debug CSV: http://127.0.0.1:5000/debug_csv
+
 
 ## Usage
 
@@ -146,5 +143,6 @@ This project is licensed under the MIT License. See LICENSE file for details.
 ## Disclaimer
 
 This tool is for educational and ergonomic purposes. Ensure compliance with privacy laws when using face recognition features.
+
 
 
